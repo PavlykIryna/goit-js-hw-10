@@ -23,8 +23,8 @@ const options = {
     const selectedDate = selectedDates[0];
     if (selectedDate <= new Date()) {
       iziToast.error({
-        title: 'Помилка',
-        message: 'Будь ласка, оберіть дату в майбутньому.',
+        title: 'Error',
+        message: 'Please choose a date in the future.',
         position: 'topRight',
       });
     } else {
@@ -52,8 +52,8 @@ function updateTimer() {
     clearInterval(timerInterval);
     resetTimerFields();
     iziToast.success({
-      title: 'Таймер завершено',
-      message: 'Час вийшов!',
+      title: 'Timer Ended',
+      message: 'The countdown has finished!',
       position: 'topRight',
     });
     datetimePicker.disabled = false;
