@@ -12,6 +12,8 @@ const secondsField = document.querySelector('[data-seconds]');
 let timerInterval;
 let userSelectedDate;
 
+startButton.disabled = true;
+
 const options = {
   enableTime: true,
   time_24hr: true,
@@ -20,8 +22,11 @@ const options = {
   onClose(selectedDates) {
     const selectedDate = selectedDates[0];
     if (selectedDate <= new Date()) {
-      window.alert('Please choose a date in the future');
-      startButton.disabled = true;
+      iziToast.error({
+        title: 'Помилка',
+        message: 'Будь ласка, оберіть дату в майбутньому.',
+        position: 'topRight',
+      });
     } else {
       userSelectedDate = selectedDate;
       startButton.disabled = false;
@@ -42,20 +47,21 @@ function startTimer() {
 function updateTimer() {
   const now = new Date();
   const timeDifference = userSelectedDate - now;
+
   if (timeDifference <= 0) {
     clearInterval(timerInterval);
+    resetTimerFields();
+    iziToast.success({
+      title: 'Таймер завершено',
+      message: 'Час вийшов!',
+      position: 'topRight',
+    });
     datetimePicker.disabled = false;
-    daysField.textContent = '00';
-    hoursField.textContent = '00';
-    minutesField.textContent = '00';
-    secondsField.textContent = '00';
     return;
   }
+
   const time = convertMs(timeDifference);
-  daysField.textContent = addLeadingZero(time.days);
-  hoursField.textContent = addLeadingZero(time.hours);
-  minutesField.textContent = addLeadingZero(time.minutes);
-  secondsField.textContent = addLeadingZero(time.seconds);
+  updateTimerFields(time);
 }
 
 function convertMs(ms) {
@@ -74,4 +80,18 @@ function convertMs(ms) {
 
 function addLeadingZero(value) {
   return String(value).padStart(2, '0');
+}
+
+function updateTimerFields(time) {
+  daysField.textContent = addLeadingZero(time.days);
+  hoursField.textContent = addLeadingZero(time.hours);
+  minutesField.textContent = addLeadingZero(time.minutes);
+  secondsField.textContent = addLeadingZero(time.seconds);
+}
+
+function resetTimerFields() {
+  daysField.textContent = '00';
+  hoursField.textContent = '00';
+  minutesField.textContent = '00';
+  secondsField.textContent = '00';
 }
